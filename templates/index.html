@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+  <title>Loja</title>
+{% endblock %}
+
+{% block content %}
+  <header class="p-3 mb-3 border-bottom bg-body-tertiary" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Início</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('today_promotions') }}">Promoções do dia</a>
+            </li>
+          </ul>
+          <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
+            <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    {% for product in products %}
+      <a href="{{ url_for('product', product_id=product.id) }}">
+        <div class="card" style="width: 18rem;">
+          <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <span class="card-text old-value">{{ product.formatted_old_value }}</span>
+            <span class="card-text value">{{ product.formatted_value }}</span>
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+  </main>
+{% endblock %}
