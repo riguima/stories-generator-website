@@ -1,0 +1,17 @@
+body {
+  background: #F0F2F5;
+}
+
+.card {
+  border: 0;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.old-value {
+  text-decoration: line-through;
+  color: gray;
+}
+
+main {
+  padding-bottom: 2rem;
+}

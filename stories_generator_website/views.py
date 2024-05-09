@@ -5,6 +5,7 @@ from sqlalchemy import select
 from stories_generator_website.database import Session
 from stories_generator_website.forms import LoginForm
 from stories_generator_website.models import Product, User
+from stories_generator_website.utils import get_today_date
 
 
 def init_app(app):
@@ -13,7 +14,14 @@ def init_app(app):
         with Session() as session:
             query = select(Product).where(Product.username == username)
             products = session.scalars(query).all()
-            return render_template('index.html', products=products)
+            return render_template('index.html', products=products, username=username, current_page='index')
+
+    @app.get('/<string:username>/promocoes-do-dia')
+    def today_promotions(username):
+        with Session() as session:
+            query = select(Product).where(Product.username == username).where(Product.create_date == get_today_date())
+            products = session.scalars(query).all()
+            return render_template('index.html', products=products, username=username, current_page='today_promotions')
 
     @app.get('/produto/<int:product_id>')
     def product(product_id):
@@ -31,14 +39,19 @@ def init_app(app):
                     Product.username == request.form['username']
                 )
                 products = session.scalars(query).all()
-                if products:
+                query = select(User).where(User.username == request.form['username'])
+                user = session.scalars(query).first()
+                if user:
+                    return redirect(url_for('register', error_message='Usuário já está cadastrado'))
+                elif products:
                     user = User(
                         username=request.form['username'],
                         password=request.form['password'],
+                        is_admin=True,
                     )
                     session.add(user)
                     session.commit()
-                    return redirect(url_for('login'))
+                    return redirect(url_for('login', success_message='Usuário Cadastrado'))
                 else:
                     return redirect(
                         url_for('login', error_message='Usuário Inválido')
@@ -46,6 +59,7 @@ def init_app(app):
         return render_template(
             'register.html',
             error_message=request.args.get('error_message'),
+            success_message=request.args.get('success_message'),
             form=form,
         )
 
@@ -79,6 +93,7 @@ def init_app(app):
         return render_template(
             'login.html',
             error_message=request.args.get('error_message'),
+            success_message=request.args.get('success_message'),
             form=form,
         )
 

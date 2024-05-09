@@ -12,6 +12,7 @@ flask-admin = "*"
 flask-login = "*"
 pytz = "*"
 flask-wtf = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 blue = "*"

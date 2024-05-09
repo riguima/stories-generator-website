@@ -13,5 +13,8 @@ def load_extensions(app):
 
 def create_app():
     app = Flask(__name__, static_folder='static', template_folder='templates')
+    app.config.update({
+        'SECRET_KEY': config['SECRET_KEY']
+    })
     load_extensions(app)
     return app

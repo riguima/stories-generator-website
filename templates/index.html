@@ -14,12 +14,21 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Início</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('today_promotions') }}">Promoções do dia</a>
-            </li>
+            {% if current_page == 'index' %}
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ url_for('index', username=username) }}">Início</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('today_promotions', username=username) }}">Promoções do dia</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index', username=username) }}">Início</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ url_for('today_promotions', username=username) }}">Promoções do dia</a>
+              </li>
+            {% endif %}
           </ul>
           <form class="d-flex" role="search">
             <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
@@ -30,17 +39,19 @@
     </nav>
   </header>
   <main>
-    {% for product in products %}
-      <a href="{{ url_for('product', product_id=product.id) }}">
-        <div class="card" style="width: 18rem;">
-          <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ product.name }}</h5>
-            <span class="card-text old-value">{{ product.formatted_old_value }}</span>
-            <span class="card-text value">{{ product.formatted_value }}</span>
+    <div class="container">
+      {% for product in products %}
+        <a href="{{ url_for('product', product_id=product.id) }}">
+          <div class="card" style="width: 18rem;">
+            <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title mb-3">{{ product.name }}</h5>
+              <p class="card-text old-value">{{ product.formatted_old_value }}</p>
+              <p class="card-text value fs-2 fw-bold text-success">{{ product.formatted_value }}</p>
+            </div>
           </div>
-        </div>
-      </a>
-    {% endfor %}
+        </a>
+      {% endfor %}
+    </div>
   </main>
 {% endblock %}
