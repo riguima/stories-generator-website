@@ -1,0 +1,29 @@
+.main-container {
+  padding: 1rem;
+  background: white;
+}
+
+.main-container img {
+  max-height: 300px;
+}
+
+.container .btn {
+  border-radius: 30px;
+}
+
+.container h4 {
+  font-weight: bold;
+}
+
+.btn {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+@media(max-width: 1000px){
+  .container h4 {
+    font-size: 1rem;
+  }
+}

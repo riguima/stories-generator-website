@@ -1,6 +1,7 @@
-from flask import redirect, render_template, request, url_for
+from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user, login_user, logout_user
 from sqlalchemy import select
+from datetime import timedelta
 
 from stories_generator_website.database import Session
 from stories_generator_website.forms import LoginForm
@@ -9,11 +10,22 @@ from stories_generator_website.utils import get_today_date
 
 
 def init_app(app):
+    def remove_old_promotions(username):
+        with Session() as session:
+            query = select(Product).where(Product.username == username).where(Product.create_date < get_today_date() - timedelta(days=7))
+            for product in session.scalars(query).all():
+                session.delete(product)
+            session.commit()
+
     @app.get('/<string:username>')
     def index(username):
+        remove_old_promotions(username)
         with Session() as session:
             query = select(Product).where(Product.username == username)
-            if request.args.get('website') and request.args.get('website') != 'all':
+            if (
+                request.args.get('website')
+                and request.args.get('website') != 'all'
+            ):
                 query = query.where(Product.website == request.args['website'])
             if request.args.get('search'):
                 query = query.where(Product.name.like(request.args['search']))
@@ -27,6 +39,7 @@ def init_app(app):
 
     @app.get('/<string:username>/promocoes-do-dia')
     def today_promotions(username):
+        remove_old_promotions(username)
         with Session() as session:
             query = (
                 select(Product)
@@ -41,12 +54,22 @@ def init_app(app):
                 current_page='today_promotions',
             )
 
-    @app.get('/produto/<int:product_id>')
-    def product(product_id):
+    @app.get('/<string:username>/produto/<int:product_id>')
+    def product(username, product_id):
+        remove_old_promotions(username)
         with Session() as session:
             query = select(Product).where(Product.id == product_id)
             product = session.scalars(query).first()
-            return render_template('product.html', product_id=product)
+            query = (
+                select(Product)
+                .where(Product.username == username)
+                .where(Product.create_date == get_today_date())
+            )
+            products = session.scalars(query).all()
+            if product:
+                return render_template('product.html', product=product, today_products=products[:8], username=username)
+            else:
+                return abort(404)
 
     @app.route('/cadastro', methods=['GET', 'POST'])
     def register():
