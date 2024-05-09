@@ -11,6 +11,30 @@ class Base(DeclarativeBase):
     pass
 
 
+class User(Base):
+    __tablename__ = 'users'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str]
+    password: Mapped[str]
+    authenticated: Mapped[Optional[bool]] = mapped_column(default=False)
+    is_admin: Mapped[Optional[bool]] = mapped_column(default=False)
+
+    @property
+    def is_authenticated(self):
+        return self.authenticated
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.id)
+
+
 class Product(Base):
     __tablename__ = 'products'
     id: Mapped[int] = mapped_column(primary_key=True)

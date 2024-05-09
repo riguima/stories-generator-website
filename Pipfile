@@ -8,6 +8,10 @@ flask = "*"
 toml = "*"
 gunicorn = "*"
 sqlalchemy = "*"
+flask-admin = "*"
+flask-login = "*"
+pytz = "*"
+flask-wtf = "*"
 
 [dev-packages]
 blue = "*"
