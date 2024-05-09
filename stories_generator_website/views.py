@@ -13,15 +13,33 @@ def init_app(app):
     def index(username):
         with Session() as session:
             query = select(Product).where(Product.username == username)
+            if request.args.get('website') and request.args.get('website') != 'all':
+                query = query.where(Product.website == request.args['website'])
+            if request.args.get('search'):
+                query = query.where(Product.name.like(request.args['search']))
             products = session.scalars(query).all()
-            return render_template('index.html', products=products, username=username, current_page='index')
+            return render_template(
+                'index.html',
+                products=products,
+                username=username,
+                current_page='index',
+            )
 
     @app.get('/<string:username>/promocoes-do-dia')
     def today_promotions(username):
         with Session() as session:
-            query = select(Product).where(Product.username == username).where(Product.create_date == get_today_date())
+            query = (
+                select(Product)
+                .where(Product.username == username)
+                .where(Product.create_date == get_today_date())
+            )
             products = session.scalars(query).all()
-            return render_template('index.html', products=products, username=username, current_page='today_promotions')
+            return render_template(
+                'index.html',
+                products=products,
+                username=username,
+                current_page='today_promotions',
+            )
 
     @app.get('/produto/<int:product_id>')
     def product(product_id):
@@ -39,10 +57,17 @@ def init_app(app):
                     Product.username == request.form['username']
                 )
                 products = session.scalars(query).all()
-                query = select(User).where(User.username == request.form['username'])
+                query = select(User).where(
+                    User.username == request.form['username']
+                )
                 user = session.scalars(query).first()
                 if user:
-                    return redirect(url_for('register', error_message='Usuário já está cadastrado'))
+                    return redirect(
+                        url_for(
+                            'register',
+                            error_message='Usuário já está cadastrado',
+                        )
+                    )
                 elif products:
                     user = User(
                         username=request.form['username'],
@@ -51,7 +76,9 @@ def init_app(app):
                     )
                     session.add(user)
                     session.commit()
-                    return redirect(url_for('login', success_message='Usuário Cadastrado'))
+                    return redirect(
+                        url_for('login', success_message='Usuário Cadastrado')
+                    )
                 else:
                     return redirect(
                         url_for('login', error_message='Usuário Inválido')

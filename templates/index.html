@@ -30,9 +30,24 @@
               </li>
             {% endif %}
           </ul>
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
-            <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+          <form class="container" role="search">
+            <div class="row">
+              <div class="d-flex text-white align-items-center gap-3 col-3">
+                <label for="website" class="form-label">Loja:</label>
+                <select id="website" name="website" class="form-select">
+                  <option value="all">Todas</option>
+                  <option value="amazon">Amazon</option>
+                  <option value="magalu">Magalu</option>
+                  <option value="mercadolivre">Mercado Livre</option>
+                </select>
+              </div>
+              <div class="col-5">
+                <input class="form-control" name="search" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
+              </div>
+              <div class="col-1">
+                <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+              </div>
+            </div>
           </form>
         </div>
       </div>

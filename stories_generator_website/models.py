@@ -48,6 +48,7 @@ class Product(Base):
     installment: Mapped[Optional[str]]
     image_url: Mapped[str]
     url: Mapped[str]
+    website: Mapped[str]
 
 
 Base.metadata.create_all(db)
