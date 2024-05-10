@@ -7,53 +7,9 @@
 {% endblock %}
 
 {% block content %}
-  <header class="p-3 mb-3 border-bottom bg-body-tertiary" data-bs-theme="dark">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            {% if current_page == 'index' %}
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ url_for('index', username=username) }}">Início</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('today_promotions', username=username) }}">Promoções do dia</a>
-              </li>
-            {% else %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('index', username=username) }}">Início</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ url_for('today_promotions', username=username) }}">Promoções do dia</a>
-              </li>
-            {% endif %}
-          </ul>
-          <form class="container" role="search">
-            <div class="row">
-              <div class="d-flex text-white align-items-center gap-3 col-3">
-                <label for="website" class="form-label">Loja:</label>
-                <select id="website" name="website" class="form-select">
-                  <option value="all">Todas</option>
-                  <option value="amazon">Amazon</option>
-                  <option value="magalu">Magalu</option>
-                  <option value="mercadolivre">Mercado Livre</option>
-                </select>
-              </div>
-              <div class="col-5">
-                <input class="form-control" name="search" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
-              </div>
-              <div class="col-1">
-                <button class="btn btn-outline-success" type="submit">Pesquisar</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </nav>
-  </header>
+  {% with current_page=current_page %}
+    {% include "includes/header.html" %}
+  {% endwith %}
   <main>
     <div class="mb-4 main-container container d-flex flex-column justify-content-center align-items-center">
       <img src="{{ product.image_url }}" class="mb-3" alt="{{ product.name }}">
@@ -74,21 +30,13 @@
       <h4>Veja mais promoções do dia</h4>
     </div>
     <div class="container mb-4">
-      <div class="row row-gap-4">
-        {% for product in today_products %}
-          <a href="{{ url_for('product', username=username, product_id=product.id) }}" class="col d-flex justify-content-center">
-            <div class="card" style="width: 18rem;">
-              <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title mb-3">{{ product.name }}</h5>
-                <p class="card-text old-value">{{ product.formatted_old_value }}</p>
-                <p class="card-text value fs-2 fw-bold text-success">{{ product.formatted_value }} <i class="fas fa-external-link-alt"></i></p>
-              </div>
-            </div>
-          </a>
-        {% endfor %}
-      <div>
+      {% with products=products %}
+        {% include "includes/products.html" %}
+      {% endwith %}
       <a href="{{ url_for('today_promotions', username=username) }}" class="w-100 mt-4 btn btn-primary">Ver todas as promoções do dia</a>
     </div>
   </main>
+  {% with configuration=configuration %}
+    {% include "includes/footer.html" %}
+  {% endwith %}
 {% endblock %}

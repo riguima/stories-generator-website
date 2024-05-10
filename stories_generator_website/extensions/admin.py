@@ -4,7 +4,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 
 from stories_generator_website.database import Session
-from stories_generator_website.models import Product
+from stories_generator_website.models import Product, Configuration
 
 
 class AdminModelView(ModelView):
@@ -19,3 +19,4 @@ def init_app(app):
     admin = Admin(app, name='admin')
     session = Session()
     admin.add_view(AdminModelView(Product, session))
+    admin.add_view(AdminModelView(Configuration, session))

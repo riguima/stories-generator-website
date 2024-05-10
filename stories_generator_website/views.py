@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from stories_generator_website.database import Session
 from stories_generator_website.forms import LoginForm
-from stories_generator_website.models import Product, User
+from stories_generator_website.models import Product, User, Configuration
 from stories_generator_website.utils import get_today_date
 
 
@@ -30,11 +30,14 @@ def init_app(app):
             if request.args.get('search'):
                 query = query.where(Product.name.like(request.args['search']))
             products = session.scalars(query).all()
+            query = select(Configuration).where(Configuration.username == username)
+            configuration = session.scalars(query).first()
             return render_template(
                 'index.html',
                 products=products,
                 username=username,
                 current_page='index',
+                configuration=configuration,
             )
 
     @app.get('/<string:username>/promocoes-do-dia')
@@ -47,11 +50,14 @@ def init_app(app):
                 .where(Product.create_date == get_today_date())
             )
             products = session.scalars(query).all()
+            query = select(Configuration).where(Configuration.username == username)
+            configuration = session.scalars(query).first()
             return render_template(
                 'index.html',
                 products=products,
                 username=username,
                 current_page='today_promotions',
+                configuration=configuration,
             )
 
     @app.get('/<string:username>/produto/<int:product_id>')
@@ -66,8 +72,10 @@ def init_app(app):
                 .where(Product.create_date == get_today_date())
             )
             products = session.scalars(query).all()
+            query = select(Configuration).where(Configuration.username == username)
+            configuration = session.scalars(query).first()
             if product:
-                return render_template('product.html', product=product, today_products=products[:8], username=username)
+                return render_template('product.html', product=product, today_products=products[:8], username=username, configuration=configuration)
             else:
                 return abort(404)
 

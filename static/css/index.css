@@ -2,12 +2,13 @@
   border: 0;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 1rem;
-  height: 550px;
+  height: 500px;
 }
 
 .card img {
-  max-height: 200px;
+  height: 200px;
   object-fit: contain;
+  object-position: center;
 }
 
 .old-value {
@@ -37,9 +38,19 @@ main {
   padding-bottom: 2rem;
 }
 
+footer i {
+  font-size: 2rem;
+  color: white;
+}
+
 @media(max-width: 1000px){
+  .card {
+    height: 400px;
+  }
+
   header .row {
     display: grid;
+    justify-content: center;
     grid-template-areas:
       "website website"
       "search-input search-button";

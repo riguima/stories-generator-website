@@ -1,0 +1,47 @@
+<header class="p-3 mb-3 border-bottom bg-body-tertiary" data-bs-theme="dark">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <button class="navbar-toggler mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {% if current_page == 'index' %}
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('index', username=username) }}">Início</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('today_promotions', username=username) }}">Promoções do dia</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('index', username=username) }}">Início</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('today_promotions', username=username) }}">Promoções do dia</a>
+            </li>
+          {% endif %}
+        </ul>
+        <form class="container" role="search">
+          <div class="row">
+            <div class="d-flex text-white align-items-center gap-3 col-3">
+              <label for="website" class="form-label">Loja:</label>
+              <select id="website" name="website" class="form-select">
+                <option value="all">Todas</option>
+                <option value="amazon">Amazon</option>
+                <option value="magalu">Magalu</option>
+                <option value="mercadolivre">Mercado Livre</option>
+              </select>
+            </div>
+            <div class="col-5">
+              <input class="form-control" name="search" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
+            </div>
+            <div class="col-1">
+              <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>

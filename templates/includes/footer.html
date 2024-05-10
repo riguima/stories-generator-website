@@ -1,0 +1,32 @@
+<footer class="p-5 text-white bg-body-tertiary" data-bs-theme="dark">
+  <div class="container text-center">
+    <p>Siga nas redes sociais:</p>
+    <div class="d-flex gap-4 justify-content-center mt-4">
+      {% if configuration.facebook %}
+        <a href="{{ configuration.facebook }}">
+          <i class="fa-brands fa-facebook-f"></i>
+        </a>
+      {% endif %}
+      {% if configuration.youtube %}
+        <a href="{{ configuration.youtube }}">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+      {% endif %}
+      {% if configuration.instagram %}
+        <a href="{{ configuration.instagram }}">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+      {% endif %}
+      {% if configuration.telegram %}
+        <a href="{{ configuration.telegram }}">
+          <i class="fa-brands fa-telegram"></i>
+        </a>
+      {% endif %}
+      {% if configuration.whatsapp %}
+        <a href="{{ configuration.whatsapp }}">
+          <i class="fa-brands fa-whatsapp"></i>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</footer>

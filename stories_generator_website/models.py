@@ -51,4 +51,15 @@ class Product(Base):
     website: Mapped[str]
 
 
+class Configuration(Base):
+    __tablename__ = 'configurations'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str]
+    facebook: Mapped[Optional[str]]
+    youtube: Mapped[Optional[str]]
+    instagram: Mapped[Optional[str]]
+    telegram: Mapped[Optional[str]]
+    whatsapp: Mapped[Optional[str]]
+
+
 Base.metadata.create_all(db)
