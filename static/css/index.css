@@ -17,6 +17,7 @@
 }
 
 .value {
+  text-wrap: nowrap;
   display: flex;
   align-items: center;
   gap: .5rem;
