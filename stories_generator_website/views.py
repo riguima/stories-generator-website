@@ -16,9 +16,13 @@ def init_app(app):
             for product in session.scalars(query).all():
                 session.delete(product)
             session.commit()
+    
+    @app.get('/')
+    def index():
+        return redirect('https://promodegrupo.com.br/')
 
     @app.get('/<string:username>')
-    def index(username):
+    def user_page(username):
         remove_old_promotions(username)
         with Session() as session:
             query = select(Product).where(Product.username == username)
