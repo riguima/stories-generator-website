@@ -39,7 +39,7 @@ class Product(Base):
     __tablename__ = 'products'
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str]
-    create_date: Mapped[Optional[date]] = mapped_column(
+    create_datetime: Mapped[Optional[date]] = mapped_column(
         default=get_today_datetime()
     )
     name: Mapped[str]
