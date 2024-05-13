@@ -6,13 +6,13 @@ from datetime import timedelta
 from stories_generator_website.database import Session
 from stories_generator_website.forms import LoginForm
 from stories_generator_website.models import Product, User, Configuration
-from stories_generator_website.utils import get_today_date
+from stories_generator_website.utils import get_today_datetime
 
 
 def init_app(app):
     def remove_old_promotions(username):
         with Session() as session:
-            query = select(Product).where(Product.username == username).where(Product.create_date < get_today_date() - timedelta(days=7))
+            query = select(Product).where(Product.username == username).where(Product.create_datetime < get_today_datetime() - timedelta(days=7))
             for product in session.scalars(query).all():
                 session.delete(product)
             session.commit()
@@ -33,6 +33,7 @@ def init_app(app):
                 query = query.where(Product.website == request.args['website'])
             if request.args.get('search'):
                 query = query.where(Product.name.like(request.args['search']))
+            query = query.order_by(Product.create_datetime)
             products = session.scalars(query).all()
             query = select(Configuration).where(Configuration.username == username)
             configuration = session.scalars(query).first()
@@ -51,7 +52,7 @@ def init_app(app):
             query = (
                 select(Product)
                 .where(Product.username == username)
-                .where(Product.create_date == get_today_date())
+                .where(Product.create_datetime == get_today_datetime())
             )
             products = session.scalars(query).all()
             query = select(Configuration).where(Configuration.username == username)
@@ -73,7 +74,7 @@ def init_app(app):
             query = (
                 select(Product)
                 .where(Product.username == username)
-                .where(Product.create_date == get_today_date())
+                .where(Product.create_datetime == get_today_datetime())
             )
             products = session.scalars(query).all()
             query = select(Configuration).where(Configuration.username == username)
