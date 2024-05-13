@@ -1,10 +1,9 @@
-from datetime import date
+from datetime import datetime, timedelta, date
 from typing import Optional
 
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from stories_generator_website.database import db
-from stories_generator_website.utils import get_today_datetime
 
 
 class Base(DeclarativeBase):
@@ -40,7 +39,7 @@ class Product(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str]
     create_datetime: Mapped[Optional[date]] = mapped_column(
-        default=get_today_datetime()
+        default=datetime.now() - timedelta(hours=3)
     )
     name: Mapped[str]
     formatted_old_value: Mapped[Optional[str]]

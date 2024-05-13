@@ -6,14 +6,15 @@ from datetime import timedelta
 from stories_generator_website.database import Session
 from stories_generator_website.forms import LoginForm
 from stories_generator_website.models import Product, User, Configuration
-from stories_generator_website.utils import get_today_datetime
+from stories_generator_website.utils import get_today_date
 
 
 def init_app(app):
     def remove_old_promotions(username):
         with Session() as session:
-            query = select(Product).where(Product.username == username).where(Product.create_datetime < get_today_datetime() - timedelta(days=7))
-            for product in session.scalars(query).all():
+            query = select(Product).where(Product.username == username)
+            products = [p for p in session.scalars(query).all() if p.create_datetime.date() < get_today_date() - timedelta(days=7)]
+            for product in products:
                 session.delete(product)
             session.commit()
     
@@ -33,7 +34,7 @@ def init_app(app):
                 query = query.where(Product.website == request.args['website'])
             if request.args.get('search'):
                 query = query.where(Product.name.like(request.args['search']))
-            query = query.order_by(Product.create_datetime)
+            query = query.order_by(Product.create_datetime.desc())
             products = session.scalars(query).all()
             query = select(Configuration).where(Configuration.username == username)
             configuration = session.scalars(query).first()
@@ -52,9 +53,8 @@ def init_app(app):
             query = (
                 select(Product)
                 .where(Product.username == username)
-                .where(Product.create_datetime == get_today_datetime())
             )
-            products = session.scalars(query).all()
+            products = [p for p in session.scalars(query).all() if p.create_datetime.date() == get_today_date()]
             query = select(Configuration).where(Configuration.username == username)
             configuration = session.scalars(query).first()
             return render_template(
@@ -74,57 +74,14 @@ def init_app(app):
             query = (
                 select(Product)
                 .where(Product.username == username)
-                .where(Product.create_datetime == get_today_datetime())
             )
-            products = session.scalars(query).all()
+            products = [p for p in session.scalars(query).all() if p.create_datetime.date() == get_today_date()]
             query = select(Configuration).where(Configuration.username == username)
             configuration = session.scalars(query).first()
             if product:
                 return render_template('product.html', product=product, today_products=products[:8], username=username, configuration=configuration)
             else:
                 return abort(404)
-
-    @app.route('/cadastro', methods=['GET', 'POST'])
-    def register():
-        form = LoginForm()
-        if form.validate_on_submit():
-            with Session() as session:
-                query = select(Product).where(
-                    Product.username == request.form['username']
-                )
-                products = session.scalars(query).all()
-                query = select(User).where(
-                    User.username == request.form['username']
-                )
-                user = session.scalars(query).first()
-                if user:
-                    return redirect(
-                        url_for(
-                            'register',
-                            error_message='Usuário já está cadastrado',
-                        )
-                    )
-                elif products:
-                    user = User(
-                        username=request.form['username'],
-                        password=request.form['password'],
-                        is_admin=True,
-                    )
-                    session.add(user)
-                    session.commit()
-                    return redirect(
-                        url_for('login', success_message='Usuário Cadastrado')
-                    )
-                else:
-                    return redirect(
-                        url_for('login', error_message='Usuário Inválido')
-                    )
-        return render_template(
-            'register.html',
-            error_message=request.args.get('error_message'),
-            success_message=request.args.get('success_message'),
-            form=form,
-        )
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
