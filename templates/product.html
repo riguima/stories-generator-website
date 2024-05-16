@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/product.css') }}">
+  <link rel="stylesheet" href="https://promodegrupo.com/static/css/index.css">
+  <link rel="stylesheet" href="https://promodegrupo.com/static/css/product.css">
   <title>{{ product.name }}</title>
 {% endblock %}
 
@@ -30,7 +30,7 @@
       <h4>Veja mais promoções do dia</h4>
     </div>
     <div class="container mb-4">
-      {% with products=products %}
+      {% with products=today_products %}
         {% include "includes/products.html" %}
       {% endwith %}
       <a href="{{ url_for('today_promotions', username=username) }}" class="w-100 mt-4 btn btn-primary">Ver todas as promoções do dia</a>

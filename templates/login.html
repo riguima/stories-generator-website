@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <link rel="stylesheet" href="https://promodegrupo.com/static/css/login.css">
 {% endblock %}
 
 {% block content %}
@@ -27,6 +27,5 @@
       {{ form.password(class_="form-control") }}
     </div>
     <input class="btn btn-primary mb-3" type="submit" value="Entrar">
-    <a class="btn btn-primary" href="{{ url_for('register') }}">Cadastro</a>
   </form>
 {% endblock %}

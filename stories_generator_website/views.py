@@ -53,6 +53,7 @@ def init_app(app):
             query = (
                 select(Product)
                 .where(Product.username == username)
+                .order_by(Product.create_datetime.desc())
             )
             products = [p for p in session.scalars(query).all() if p.create_datetime.date() == get_today_date()]
             query = select(Configuration).where(Configuration.username == username)
@@ -74,6 +75,7 @@ def init_app(app):
             query = (
                 select(Product)
                 .where(Product.username == username)
+                .order_by(Product.create_datetime.desc())
             )
             products = [p for p in session.scalars(query).all() if p.create_datetime.date() == get_today_date()]
             query = select(Configuration).where(Configuration.username == username)
